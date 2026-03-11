@@ -24,12 +24,10 @@ WORKDIR /var/www/html
 COPY composer.json composer.lock ./
 RUN composer install --no-dev --optimize-autoloader --no-scripts --no-interaction
 
-# Copy package files and build assets
-COPY package.json package-lock.json ./
-RUN npm ci && npm run build
-
 # Copy application
 COPY . .
+
+RUN npm ci && npm run build
 
 # Permissions
 RUN chown -R www-data:www-data storage bootstrap/cache
