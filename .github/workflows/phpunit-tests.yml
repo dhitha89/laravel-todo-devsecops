@@ -29,6 +29,12 @@ jobs:
       - name: Composer install
         uses: ramsey/composer-install@v3
 
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Build Vite assets
+        run: npm run build
+
       - name: Copy env
         run: cp .env.example .env
 
