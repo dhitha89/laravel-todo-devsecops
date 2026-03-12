@@ -1,0 +1,31 @@
+name: Deploy to EC2
+
+on:
+  workflow_call:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            docker pull ${{ vars.DOCKERHUB_USER }}/laravel-todo-devsecops:latest
+            docker stop laravel-app || true
+            docker rm laravel-app || true
+            docker run -d \
+              --name laravel-app \
+              -p 80:8080 \
+              --env APP_ENV=production \
+              --env APP_KEY=${{ secrets.APP_KEY }} \
+              --env APP_DEBUG=false \
+              --env DB_CONNECTION=mysql \
+              --env DB_HOST=${{ secrets.DB_HOST }} \
+              --env DB_DATABASE=${{ secrets.DB_DATABASE }} \
+              --env DB_USERNAME=${{ secrets.DB_USERNAME }} \
+              --env DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+              ${{ vars.DOCKERHUB_USER }}/laravel-todo-devsecops:latest
