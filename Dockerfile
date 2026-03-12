@@ -32,6 +32,9 @@ RUN npm ci && npm run build
 # Permissions
 RUN chown -R www-data:www-data storage bootstrap/cache
 
+COPY docker/nginx.conf /etc/nginx/nginx.conf
+COPY docker/supervisord.conf /etc/supervisord.conf
+
 EXPOSE 8080
 
-CMD ["php-fpm"]
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
