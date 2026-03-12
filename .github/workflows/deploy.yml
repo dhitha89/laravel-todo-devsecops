@@ -20,7 +20,7 @@ jobs:
             docker rm laravel-app || true
             docker run -d \
               --name laravel-app \
-              -p 80:8080 \
+              -p 8080:8080 \
               --env APP_ENV=production \
               --env APP_KEY=${{ secrets.APP_KEY }} \
               --env APP_DEBUG=false \
